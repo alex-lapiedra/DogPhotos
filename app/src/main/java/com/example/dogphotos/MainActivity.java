@@ -1,7 +1,11 @@
 package com.example.dogphotos;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -26,10 +30,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, View.OnClickListener {
     SearchView dogSearchView;
     RecyclerView dogsRecycledView;
     ImageView dogIcon;
+    ImageButton suggestionsButton;
     DogAddapter adapter;
     List<String> dogImagesUrl = new ArrayList<>();
 
@@ -47,7 +52,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         dogSearchView = findViewById(R.id.dogSearchView);
         dogsRecycledView = findViewById(R.id.dogsRecycledView);
         dogIcon = findViewById(R.id.dogIcon);
+        suggestionsButton = findViewById(R.id.suggestionsButton);
+
+        suggestionsButton.setOnClickListener(this);
         dogSearchView.setOnQueryTextListener(this);
+
         initRecycleView();
     }
 
@@ -101,5 +110,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public boolean onQueryTextChange(String newText) {
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent suggestionsIntent = new Intent(MainActivity.this, SuggestionsActivity.class);
+        startActivity(suggestionsIntent);
     }
 }
