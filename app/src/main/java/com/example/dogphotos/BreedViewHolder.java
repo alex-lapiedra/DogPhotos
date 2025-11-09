@@ -15,7 +15,8 @@ public class BreedViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setBreedName(String breedName) {
-        breedTextView.setText(breedName);
+        String capitalizedBreed = breedName.substring(0, 1).toUpperCase() + breedName.substring(1);
+        breedTextView.setText(capitalizedBreed);
     }
 
 }

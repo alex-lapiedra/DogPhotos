@@ -3,6 +3,7 @@ package com.example.dogphotos;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -10,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dogphotos.dataModel.BreedsResponse;
 import com.example.dogphotos.dataModel.DogResponse;
@@ -26,6 +29,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class SuggestionsActivity extends AppCompatActivity {
     Map <String, List<String>> breedsMap;
 
+    BreedAdapter adapter;
+    RecyclerView breedsRecyclerView;
+    ProgressBar activityIndicator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +43,16 @@ public class SuggestionsActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        activityIndicator = findViewById(R.id.activityIndicator);
+        initRecyclerView();
         getAllBreeds();
+    }
+
+    private void initRecyclerView() {
+        adapter = new BreedAdapter();
+        breedsRecyclerView = findViewById(R.id.suggestionsRecycledView);
+        breedsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        breedsRecyclerView.setAdapter(adapter);
     }
 
     private Retrofit getRetrofit() {
@@ -54,16 +70,21 @@ public class SuggestionsActivity extends AppCompatActivity {
             public void onResponse(Call<BreedsResponse> call, Response<BreedsResponse> response) {
                 BreedsResponse breedsResponse = response.body();
                 if (breedsResponse != null && breedsResponse.status.equals("success")) {
+                    activityIndicator.setVisibility(View.INVISIBLE);
                     breedsMap = breedsResponse.message;
-                    //adapter.notifyDataSetChanged();
+                    adapter.setBreedsNames(breedsMap);
+                    adapter.notifyDataSetChanged();
                     Log.d("breedResponse", breedsMap.get("hound").toString());
                 } else {
+                    activityIndicator.setVisibility(View.INVISIBLE);
                     Toast.makeText(SuggestionsActivity.this, "Algo ha salido mal", Toast.LENGTH_LONG).show();
+
                 }
             }
 
             @Override
             public void onFailure(Call<BreedsResponse> call, Throwable t) {
+                activityIndicator.setVisibility(View.INVISIBLE);
                 Toast.makeText(SuggestionsActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });

@@ -18,7 +18,20 @@ import java.util.Map;
 import java.util.Set;
 
 public class BreedAdapter extends RecyclerView.Adapter<BreedViewHolder> {
-    public Map<String, List<String>> breedsNames;
+    private Map<String, List<String>> breedsNames;
+    private ArrayList<String> breedNamesSortedArray;
+
+    public void setBreedsNames(Map<String, List<String>> breedsNames) {
+        this.breedsNames = breedsNames;
+        Set<String> allKeysSet = this.breedsNames.keySet();
+        breedNamesSortedArray = new ArrayList<>(allKeysSet);
+        breedNamesSortedArray.sort(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.compareTo(o2);
+            }
+        });
+    }
 
     @NonNull
     @Override
@@ -29,19 +42,16 @@ public class BreedAdapter extends RecyclerView.Adapter<BreedViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BreedViewHolder holder, int position) {
-        Set<String> allKeysSet = breedsNames.keySet();
-        ArrayList<String> allKeys = new ArrayList<>(allKeysSet);
-        allKeys.sort(new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return 0;
-            }
-        });
-
+        if( position < breedNamesSortedArray.size() ) {
+            holder.setBreedName(breedNamesSortedArray.get(position));
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        if (breedNamesSortedArray == null) {
+            return 0;
+        }
+        return breedNamesSortedArray.size();
     }
 }
