@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class DogAddapter extends RecyclerView.Adapter<DogViewHolder> {
-    public List<String> dogsURL;
+    public List<String> dogPhotoURLs;
 
     DogAddapter(List<String> urls) {
-        dogsURL = urls;
+        dogPhotoURLs = urls;
     }
 
     @NonNull
@@ -25,14 +25,13 @@ public class DogAddapter extends RecyclerView.Adapter<DogViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull DogViewHolder holder, int position) {
-        if( position < dogsURL.size() ) {
-            holder.drawDog(dogsURL.get(position));
+        if( position < dogPhotoURLs.size() ) {
+            holder.drawDog(dogPhotoURLs.get(position));
         }
-        Log.d("kk", "asking for item " + position);
     }
 
     @Override
     public int getItemCount() {
-        return dogsURL.size();
+        return dogPhotoURLs.size();
     }
 }

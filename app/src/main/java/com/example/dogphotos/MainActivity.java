@@ -2,9 +2,7 @@ package com.example.dogphotos;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SearchView;
@@ -17,7 +15,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerViewAccessibilityDelegate;
 
 import com.example.dogphotos.dataModel.DogResponse;
 
@@ -76,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private void searchByBreed(String breed) {
         DogsAPI dogsAPI = getRetrofit().create(DogsAPI.class);
         Call<DogResponse> call = dogsAPI.getDogImagesByBreed("breed/" + breed + "/images");
-        call.enqueue(new Callback<DogResponse>() {
+        Callback<DogResponse> callback = new Callback<>() {
             @Override
             public void onResponse(Call<DogResponse> call, Response<DogResponse> response) {
                 DogResponse dogResponse = response.body();
@@ -96,7 +93,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             public void onFailure(Call<DogResponse> call, Throwable t) {
                 Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
-        });
+        };
+        call.enqueue(callback);
     }
 
     @Override
