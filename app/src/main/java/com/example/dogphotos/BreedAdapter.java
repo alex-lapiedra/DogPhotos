@@ -20,6 +20,7 @@ import java.util.Set;
 public class BreedAdapter extends RecyclerView.Adapter<BreedViewHolder> {
     private Map<String, List<String>> breedsNames;
     private ArrayList<String> breedNamesSortedArray;
+    //HOLAAAAAAAAAAAAAAAA
 
     public void setBreedsNames(Map<String, List<String>> breedsNames) {
         this.breedsNames = breedsNames;
