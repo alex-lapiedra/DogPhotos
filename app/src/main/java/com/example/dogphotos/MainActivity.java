@@ -1,5 +1,6 @@
 package com.example.dogphotos;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +10,9 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -34,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     ImageButton suggestionsButton;
     DogAddapter adapter;
     List<String> dogImagesUrl = new ArrayList<>();
+    private ActivityResultLauncher<Intent> launcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,20 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         dogSearchView.setOnQueryTextListener(this);
 
         initRecycleView();
+
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result-> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            String breedName = data.getStringExtra("breedSelection");
+                            dogSearchView.setQuery(breedName,true);
+                            dogSearchView.setIconified(false);
+                            dogSearchView.clearFocus();
+                            dogsRecycledView.getLayoutManager().scrollToPosition(0);
+                        }
+                    }
+                });
     }
 
     private void initRecycleView() {
@@ -84,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     }
                     adapter.notifyDataSetChanged();
                     dogIcon.setVisibility(View.GONE);
+                    dogSearchView.clearFocus();
                 } else {
                     Toast.makeText(MainActivity.this, "Algo ha salido mal", Toast.LENGTH_LONG).show();
                 }
@@ -112,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @Override
     public void onClick(View v) {
-        Intent suggestionsIntent = new Intent(MainActivity.this, SuggestionsActivity.class);
-        startActivity(suggestionsIntent);
+        Intent suggestionsIntent = new Intent(this, SuggestionsActivity.class);
+        launcher.launch(suggestionsIntent);
     }
 }

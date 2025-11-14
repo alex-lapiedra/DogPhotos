@@ -2,6 +2,7 @@ package com.example.dogphotos;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,9 +19,13 @@ import java.util.Map;
 import java.util.Set;
 
 public class BreedAdapter extends RecyclerView.Adapter<BreedViewHolder> {
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
     private Map<String, List<String>> breedsNames;
-    private ArrayList<String> breedNamesSortedArray;
-    //HOLAAAAAAAAAAAAAAAA
+    public ArrayList<String> breedNamesSortedArray;
+    public OnItemClickListener clickListener;
 
     public void setBreedsNames(Map<String, List<String>> breedsNames) {
         this.breedsNames = breedsNames;
@@ -45,6 +50,9 @@ public class BreedAdapter extends RecyclerView.Adapter<BreedViewHolder> {
     public void onBindViewHolder(@NonNull BreedViewHolder holder, int position) {
         if( position < breedNamesSortedArray.size() ) {
             holder.setBreedName(breedNamesSortedArray.get(position));
+            holder.itemView.setOnClickListener(view -> {
+                clickListener.onItemClick(position);
+            });
         }
     }
 

@@ -1,5 +1,7 @@
 package com.example.dogphotos;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,7 +28,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class SuggestionsActivity extends AppCompatActivity {
+public class SuggestionsActivity extends AppCompatActivity implements BreedAdapter.OnItemClickListener {
     Map <String, List<String>> breedsMap;
 
     BreedAdapter adapter;
@@ -50,9 +52,18 @@ public class SuggestionsActivity extends AppCompatActivity {
 
     private void initRecyclerView() {
         adapter = new BreedAdapter();
+        adapter.clickListener = this;
         breedsRecyclerView = findViewById(R.id.suggestionsRecycledView);
         breedsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         breedsRecyclerView.setAdapter(adapter);
+    }
+
+    public void onItemClick(int position) {
+        String breedName = adapter.breedNamesSortedArray.get(position);
+        Intent intent = new Intent();
+        intent.putExtra("breedSelection", breedName);
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 
     private Retrofit getRetrofit() {
