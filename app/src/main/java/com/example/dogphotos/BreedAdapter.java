@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.dogphotos.dataModel.SubBreed;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -24,19 +26,34 @@ public class BreedAdapter extends RecyclerView.Adapter<BreedViewHolder> {
         void onItemClick(int position);
     }
     private Map<String, List<String>> breedsNames;
-    public ArrayList<String> breedNamesSortedArray;
+    public ArrayList<SubBreed> breedNamesSortedArray = new ArrayList<>();
     public OnItemClickListener clickListener;
 
     public void setBreedsNames(Map<String, List<String>> breedsNames) {
         this.breedsNames = breedsNames;
+        breedNamesSortedArray.clear();
         Set<String> allKeysSet = this.breedsNames.keySet();
-        breedNamesSortedArray = new ArrayList<>(allKeysSet);
-        breedNamesSortedArray.sort(new Comparator<String>() {
+        ArrayList<String> allParentBreeds = new ArrayList<>(allKeysSet);
+        for (String parentBreed: allParentBreeds){
+            SubBreed subBreed = new SubBreed();
+            subBreed.name = parentBreed;
+            subBreed.parentBreed = null;
+            breedNamesSortedArray.add(subBreed);
+            for (String subBreedName: breedsNames.get(parentBreed)) {
+                SubBreed subBreed1 = new SubBreed();
+                subBreed1.name = subBreedName;
+                subBreed1.parentBreed = parentBreed;
+                breedNamesSortedArray.add(subBreed1);
+            }
+
+        }
+
+       /* breedNamesSortedArray.sort(new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
                 return o1.compareTo(o2);
             }
-        });
+        });*/
     }
 
     @NonNull

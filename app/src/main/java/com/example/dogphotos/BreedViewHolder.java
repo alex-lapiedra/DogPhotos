@@ -6,6 +6,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.dogphotos.dataModel.SubBreed;
+
 public class BreedViewHolder extends RecyclerView.ViewHolder {
     TextView breedTextView;
 
@@ -14,9 +16,12 @@ public class BreedViewHolder extends RecyclerView.ViewHolder {
         breedTextView = itemView.findViewById(R.id.textView);
     }
 
-    public void setBreedName(String breedName) {
-        String capitalizedBreed = breedName.substring(0, 1).toUpperCase() + breedName.substring(1);
-        breedTextView.setText(capitalizedBreed);
+    public void setBreedName(SubBreed breed) {
+        String capitalizedBreed = breed.name.substring(0, 1).toUpperCase() + breed.name.substring(1);
+        if (breed.parentBreed == null) {
+            breedTextView.setText(capitalizedBreed);
+        } else {
+            breedTextView.setText(breed.parentBreed + " " + capitalizedBreed);
+        }
     }
-
 }

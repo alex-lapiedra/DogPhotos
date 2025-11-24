@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dogphotos.dataModel.BreedsResponse;
 import com.example.dogphotos.dataModel.DogResponse;
+import com.example.dogphotos.dataModel.SubBreed;
 
 import java.util.List;
 import java.util.Map;
@@ -59,9 +60,9 @@ public class SuggestionsActivity extends AppCompatActivity implements BreedAdapt
     }
 
     public void onItemClick(int position) {
-        String breedName = adapter.breedNamesSortedArray.get(position);
+        SubBreed breed = adapter.breedNamesSortedArray.get(position);
         Intent intent = new Intent();
-        intent.putExtra("breedSelection", breedName);
+        intent.putExtra("breedSelection", breed.name);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }
